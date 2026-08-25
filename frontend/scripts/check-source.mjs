@@ -196,15 +196,9 @@ const loginTemplate = await read(
 const menu = JSON.parse(
   await read(`${projectRoot}root/usr/share/luci/menu.d/luci-app-smartsafehub.json`),
 );
-const loginRoute = menu.smartsafehub;
-
-if (
-  loginRoute?.action?.type !== 'template' ||
-  loginRoute?.action?.path !== 'smartsafehub/login' ||
-  JSON.stringify(loginRoute?.auth) !== '{}'
-) {
+if ('smartsafehub' in menu) {
   throw new Error(
-    'SmartSafeHub public login route is not registered as an unauthenticated template',
+    'SmartSafeHub must rely on the LuCI theme login instead of registering a public route',
   );
 }
 
@@ -235,7 +229,7 @@ for (const contract of [
   'smartsafehub-login-root',
   'data-asset-base',
   'data-asset-version',
-  'app.js?v=0.2.0-r9',
+  'app.js?v=0.2.0-r10',
 ]) {
   if (!loginTemplate.includes(contract)) {
     throw new Error(`SmartSafeHub login template does not contain: ${contract}`);
